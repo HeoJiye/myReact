@@ -1,8 +1,14 @@
 import { isReactDOMTextNode } from '@myReact/utils/typeGuards';
+import { createComponentKey, getHookComponent } from '@myReact/react-hook';
 
-export default function createElement(tag: string | Function, props: object, ...children: ReactDOM.Element[]): ReactDOM.Element {
+export default function createElement(tag: string | Function, props: object, ...children: ReactDOM.Element[]): ReactDOM.Node {
   if (typeof tag === 'function') {
-    return tag({ ...props, children });
+    const key = createComponentKey(tag);
+    const hookComponent = getHookComponent(key);
+    return {
+      key: key,
+      ...tag.call(hookComponent)
+    };
   }
   return { tag, props, children: vaildateChildren(children) };
 }
