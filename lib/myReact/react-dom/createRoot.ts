@@ -1,4 +1,4 @@
-import { resetHookIdx } from '@myReact/react-hook';
+import { resetHookIdx, runEffects } from '@myReact/react-hook';
 import render from './render';
 
 let CONTAINER: Element;
@@ -19,6 +19,7 @@ export default function createRoot(container: Element | null): { render: (reactD
 
       const htmlDOM = render(CUR_REACTDOM);
       container.replaceChildren(htmlDOM);
+      runEffects();
     }
   };
 }

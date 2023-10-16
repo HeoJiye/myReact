@@ -23,6 +23,10 @@ function createEmptyDOM(element: ReactDOM.Element): Element {
 }
 
 function insertProp(dom: Element, element: ReactDOM.Element, key: string) {
+  if (key === 'ref') {
+    (element.props['ref'] as any).current = dom;
+    return;
+  }
   if (isReactDOMSVGElement(element)) {
     dom.setAttribute(key, element.props[key]);
   } else {

@@ -1,4 +1,4 @@
-import { resetHookIdx } from '@myReact/react-hook';
+import { resetHookIdx, runEffects } from '@myReact/react-hook';
 
 import { getContainer, getCurReactDOM, getReactDOMFunc } from './createRoot';
 import reconcileDOM from './reconcileDOM';
@@ -10,6 +10,7 @@ export default function rerender() {
   resetHookIdx();
 
   reconcileDOM(reactDOM, newReactDOM, htmlDOM);
+  runEffects();
 }
 
 function getRootData(): [ReactDOM.Element, Element, Function] {
