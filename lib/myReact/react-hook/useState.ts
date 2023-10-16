@@ -1,42 +1,30 @@
-import rerender from '@myReact/react-dom/rerender';
+import { rerender } from '@myReact/react-dom';
 
-type StateStore = {
-  states: any[];
-  stateIdx: number;
-};
+type SetStateParam<T> = T | ((prev: T) => T);
 
-export function createUseState(key: number): [ReactHook.UseState, () => void] {
-  const stateStore: StateStore = {
-    states: [],
-    stateIdx: 0
-  };
-  const useStateFunc = useState.bind(null, key, stateStore) as ReactHook.UseState;
-  return [useStateFunc, () => resetStateIdx(stateStore)];
-}
+const states: any[] = [];
+let stateIdx = 0;
 
-function useState<T>(key: number, stateStore: StateStore, initState: any): [T, (state: ReactHook.SetStateParam<T>) => void] {
-  if (stateStore.states.length === stateStore.stateIdx) {
-    stateStore.states.push(initState);
+export default function useState<T>(initState: any): [T, (state: SetStateParam<T>) => void] {
+  if (states.length === stateIdx) {
+    states.push(initState);
   }
 
-  const curIdx = stateStore.stateIdx;
-  stateStore.stateIdx += 1;
+  const curIdx = stateIdx;
+  stateIdx += 1;
 
-  const setState = createSetState<T>(key, stateStore.states, curIdx);
-  return [stateStore.states[curIdx], setState];
+  return [states[curIdx], setState.bind(null, curIdx)];
 }
 
-function createSetState<T>(key: number, states: any[], curIdx: number): (state: ReactHook.SetStateParam<T>) => void {
-  return (state: ReactHook.SetStateParam<T>): void => {
-    if (state instanceof Function) {
-      states[curIdx] = state(states[curIdx]);
-    } else {
-      states[curIdx] = state;
-    }
-    rerender(key);
-  };
+function setState<T>(curIdx: number, state: SetStateParam<T>): void {
+  if (state instanceof Function) {
+    states[curIdx] = state(states[curIdx]);
+  } else {
+    states[curIdx] = state;
+  }
+  rerender();
 }
 
-function resetStateIdx(stateStore: StateStore): void {
-  stateStore.stateIdx = 0;
+export function resetStateIdx(): void {
+  stateIdx = 0;
 }

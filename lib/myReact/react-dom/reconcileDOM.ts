@@ -1,11 +1,7 @@
 import { isReactDOMTextNode } from '@myReact/utils/typeGuards';
 import render from './render';
 
-export default function reconcileDOM(
-  prevReactDOM: ReactDOM.Component | ReactDOM.Element,
-  nextReactDOM: ReactDOM.Component | ReactDOM.Element,
-  htmlDOM: Element
-): void {
+export default function reconcileDOM(prevReactDOM: ReactDOM.Element, nextReactDOM: ReactDOM.Element, htmlDOM: Element): void {
   if (prevReactDOM.tag != nextReactDOM.tag) {
     replaceDOM(nextReactDOM, htmlDOM);
     return;
@@ -15,12 +11,8 @@ export default function reconcileDOM(
   reconcileChildren(prevReactDOM, nextReactDOM, htmlDOM);
 }
 
-function reconcileProps(
-  prevReactDOM: ReactDOM.Component | ReactDOM.Element,
-  nextReactDOM: ReactDOM.Component | ReactDOM.Element,
-  htmlDOM: Element
-): void {
-  const checkNullOrDiff = (reactDOM: ReactDOM.Component | ReactDOM.Element, key: string) => {
+function reconcileProps(prevReactDOM: ReactDOM.Element, nextReactDOM: ReactDOM.Element, htmlDOM: Element): void {
+  const checkNullOrDiff = (reactDOM: ReactDOM.Element, key: string) => {
     return reactDOM.props === null || reactDOM.props[key] === null || prevReactDOM.props[key] !== nextReactDOM.props[key];
   };
 
@@ -40,11 +32,7 @@ function reconcileProps(
   });
 }
 
-function reconcileChildren(
-  prevReactDOM: ReactDOM.Component | ReactDOM.Element,
-  nextReactDOM: ReactDOM.Component | ReactDOM.Element,
-  htmlDOM: Element
-): void {
+function reconcileChildren(prevReactDOM: ReactDOM.Element, nextReactDOM: ReactDOM.Element, htmlDOM: Element): void {
   if (isReactDOMTextNode(nextReactDOM.children[0])) {
     if (prevReactDOM.children[0] !== nextReactDOM.children[0]) {
       htmlDOM.textContent = nextReactDOM.children[0].toString();
@@ -63,7 +51,7 @@ function reconcileChildren(
   htmlDOM.append(...nextReactDOM.children.slice(minChildrenLength).map(render));
 }
 
-function replaceDOM(reactDOM: ReactDOM.Component | ReactDOM.Element, htmlDOM: Element): void {
+function replaceDOM(reactDOM: ReactDOM.Element, htmlDOM: Element): void {
   const newDom = render(reactDOM);
   htmlDOM.replaceWith(newDom);
 }

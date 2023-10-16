@@ -1,4 +1,7 @@
-import createComponentKey from './createComponentKey';
-import { getHookComponent, getReloadFunc } from './hookComponent';
+import { resetStateIdx } from './useState';
 
-export { createComponentKey, getHookComponent, getReloadFunc };
+export { default as useState } from './useState';
+
+export function resetHookIdx(): void {
+  resetStateIdx();
+}

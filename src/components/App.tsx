@@ -2,8 +2,8 @@ import React from '@myReact';
 import logo from '../assets/logo.svg';
 import './App.css';
 
-function App(this: ReactHook.Component) {
-  const [count, setCount] = this.useState(0);
+function App(): JSX.Element {
+  const [count, setCount] = React.useState<number>(0);
 
   return (
     <div className="App">
