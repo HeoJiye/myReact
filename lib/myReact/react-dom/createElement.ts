@@ -1,8 +1,13 @@
 import { isReactDOMTextNode } from '@myReact/utils/typeGuards';
 
-export default function createElement(tag: string | Function, props: object, ...children: ReactDOM.Element[]): ReactDOM.Node {
+// ReactDOM.Element(가상 돔)을 생성하는 함수
+export default function createElement(
+  tag: string | Function,
+  props: object,
+  ...children: ReactDOM.Element[]
+): ReactDOM.Node {
   if (typeof tag === 'function') {
-    return tag();
+    return tag(props);
   }
   return { tag, props, children: vaildateChildren(children) };
 }
@@ -10,6 +15,7 @@ export default function createElement(tag: string | Function, props: object, ...
 function vaildateChildren(children: ReactDOM.Element[]): ReactDOM.Element[] {
   let newChildren = [...children];
 
+  // 자식 중에 fragment tag가 있을 경우, 풀어주는 과정
   newChildren = newChildren.flat();
   while (newChildren.some(child => isFragmentElement(child))) {
     newChildren = newChildren.map(unwrapIfFragmentElement).flat();
@@ -22,7 +28,9 @@ function isFragmentElement(child: ReactDOM.Element): boolean {
   return !isReactDOMTextNode(child) && !child?.tag;
 }
 
-function unwrapIfFragmentElement(child: ReactDOM.Element): ReactDOM.Element[] | ReactDOM.Element {
+function unwrapIfFragmentElement(
+  child: ReactDOM.Element
+): ReactDOM.Element[] | ReactDOM.Element {
   if (isFragmentElement(child)) {
     return child?.children;
   }

@@ -1,5 +1,9 @@
-import { isReactDOMSVGElement, isReactDOMTextNode } from '@myReact/utils/typeGuards';
+import {
+  isReactDOMSVGElement,
+  isReactDOMTextNode
+} from '@myReact/utils/typeGuards';
 
+// ReactDOM.Element(가상 돔)을 실제 돔으로 만드는 함수
 export default function render(node: ReactDOM.Node): Element | Text {
   if (isReactDOMTextNode(node)) {
     return document.createTextNode(node.toString());
@@ -10,7 +14,9 @@ export default function render(node: ReactDOM.Node): Element | Text {
   if (element.props) {
     Object.keys(element.props).forEach(insertProp.bind(null, dom, element));
   }
-  element.children.map(child => render(child)).forEach(child => dom.appendChild(child));
+  element.children
+    .map(child => render(child))
+    .forEach(child => dom.appendChild(child));
 
   return dom;
 }
