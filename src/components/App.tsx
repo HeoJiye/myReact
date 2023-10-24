@@ -1,9 +1,13 @@
 import React from '@myReact';
 import logo from '../assets/logo.svg';
 import './App.css';
+import ComponentA from './ComponentA';
+import ComponentB from './ComponentB';
 
 function App(): JSX.Element {
   const [count, setCount] = React.useState<number>(0);
+  const [isA, setIsA] = React.useState<boolean>(true);
+
   const ref = React.useRef();
 
   React.useEffect(() => {
@@ -24,10 +28,14 @@ function App(): JSX.Element {
           className="App-logo"
           alt="logo"
         />
-        <p>
-          <p>{`count: ${count}`}</p>
-          <button onclick={() => setCount(count => count + 1)}>count up</button>
-        </p>
+        <div style="{display: flex;}">
+          <p>
+            <p>{`count: ${count}`}</p>
+            <button onclick={() => setCount(count => count + 1)}>count up</button>
+            <button onclick={() => setIsA(isA => !isA)}>component change</button>
+          </p>
+          {isA ? <ComponentA /> : <ComponentB />}
+        </div>
       </header>
     </div>
   );

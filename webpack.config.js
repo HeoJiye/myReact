@@ -10,7 +10,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       '@lib': path.resolve(__dirname, 'lib/'),
-      '@myReact': path.resolve(__dirname, 'lib/myReact')
+      '@myReact': path.resolve(__dirname, 'lib/react')
     }
   },
   entry: {

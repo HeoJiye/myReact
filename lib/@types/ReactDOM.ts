@@ -4,6 +4,10 @@ declare module ReactDOM {
     props?: any;
     children: Element[];
   };
+  type Component = {
+    tag: Function;
+    props?: any;
+  };
+
   type TextNode = string | number | boolean;
-  type Node = Element | TextNode;
 }

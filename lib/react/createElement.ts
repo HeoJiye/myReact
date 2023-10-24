@@ -1,13 +1,18 @@
-import { isReactDOMTextNode } from '@myReact/utils/typeGuards';
+import { renderWithHooks } from '@lib/react-reconciler';
+import { isReactDOMTextNode } from '@lib/utils/typeGuards';
 
 // ReactDOM.Element(가상 돔)을 생성하는 함수
-export default function createElement(
-  tag: string | Function,
-  props: object,
-  ...children: ReactDOM.Element[]
-): ReactDOM.Node {
+export default function createElement(tag: string | Function, props: object, ...children: ReactDOM.Element[]): ReactDOM.Element {
   if (typeof tag === 'function') {
-    return tag(props);
+    const component: ReactDOM.Component = {
+      tag: tag,
+      props: {
+        ...props,
+        children: vaildateChildren(children)
+      }
+    };
+
+    return renderWithHooks(component);
   }
   return { tag, props, children: vaildateChildren(children) };
 }
@@ -28,9 +33,7 @@ function isFragmentElement(child: ReactDOM.Element): boolean {
   return !isReactDOMTextNode(child) && !child?.tag;
 }
 
-function unwrapIfFragmentElement(
-  child: ReactDOM.Element
-): ReactDOM.Element[] | ReactDOM.Element {
+function unwrapIfFragmentElement(child: ReactDOM.Element): ReactDOM.Element[] | ReactDOM.Element {
   if (isFragmentElement(child)) {
     return child?.children;
   }
